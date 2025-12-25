@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工单管理系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .section h2 {
+            color: #555;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .api-list {
+            list-style: none;
+            padding: 0;
+        }
+        .api-list li {
+            background: #f8f9fa;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 3px;
+            border-left: 4px solid #007bff;
+        }
+        .method {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .endpoint {
+            font-family: monospace;
+            background: #e9ecef;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+        .description {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>工单管理系统 API 文档</h1>
+        
+        <div class="section">
+            <h2>系统功能概述</h2>
+            <p>本工单管理系统提供以下核心功能：</p>
+            <ul>
+                <li>✅ 用户创建工单，支持工单分类和优先级</li>
+                <li>✅ 工单状态管理（待处理、处理中、已解决、已关闭）</li>
+                <li>✅ 自动分配工单和手动分配工单</li>
+                <li>✅ 工单转交功能</li>
+                <li>✅ 文字和图片回复工单</li>
+                <li>✅ 工单处理时间要求和关闭工单</li>
+                <li>✅ 用户评价打分功能（最高5分）</li>
+                <li>✅ 工单统计功能（数量和平均解决时间）</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>测试用户</h2>
+            <p>系统已预置以下测试用户：</p>
+            <ul>
+                <li><strong>管理员:</strong> admin / admin123</li>
+                <li><strong>客服1:</strong> agent1 / agent123</li>
+                <li><strong>客服2:</strong> agent2 / agent123</li>
+                <li><strong>客户1:</strong> customer1 / customer123</li>
+                <li><strong>客户2:</strong> customer2 / customer123</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>工单管理 API</h2>
+            <ul class="api-list">
+                <li>
+                    <span class="method">POST</span>
+                    <span class="endpoint">/api/tickets/create</span>
+                    <span class="description">创建工单</span>
+                </li>
+                <li>
+                    <span class="method">GET</span>
+                    <span class="endpoint">/api/tickets/user/{userId}</span>
+                    <span class="description">获取用户的工单列表</span>
+                </li>
+                <li>
+                    <span class="method">GET</span>
+                    <span class="endpoint">/api/tickets/{ticketId}</span>
+                    <span class="description">获取工单详情</span>
+                </li>
+                <li>
+                    <span class="method">PUT</span>
+                    <span class="endpoint">/api/tickets/{ticketId}/status</span>
+                    <span class="description">更新工单状态</span>
+                </li>
+                <li>
+                    <span class="method">PUT</span>
+                    <span class="endpoint">/api/tickets/{ticketId}/assign</span>
+                    <span class="description">手动分配工单</span>
+                </li>
+                <li>
+                    <span class="method">PUT</span>
+                    <span class="endpoint">/api/tickets/{ticketId}/auto-assign</span>
+                    <span class="description">自动分配工单</span>
+                </li>
+                <li>
+                    <span class="method">PUT</span>
+                    <span class="endpoint">/api/tickets/{ticketId}/transfer</span>
+                    <span class="description">转交工单</span>
+                </li>
+                <li>
+                    <span class="method">POST</span>
+                    <span class="endpoint">/api/tickets/{ticketId}/reply</span>
+                    <span class="description">回复工单</span>
+                </li>
+                <li>
+                    <span class="method">GET</span>
+                    <span class="endpoint">/api/tickets/{ticketId}/replies</span>
+                    <span class="description">获取工单回复列表</span>
+                </li>
+                <li>
+                    <span class="method">PUT</span>
+                    <span class="endpoint">/api/tickets/{ticketId}/close</span>
+                    <span class="description">关闭工单</span>
+                </li>
+                <li>
+                    <span class="method">GET</span>
+                    <span class="endpoint">/api/tickets/categories</span>
+                    <span class="description">获取工单分类</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>评价管理 API</h2>
+            <ul class="api-list">
+                <li>
+                    <span class="method">POST</span>
+                    <span class="endpoint">/api/reviews/create</span>
+                    <span class="description">创建工单评价</span>
+                </li>
+                <li>
+                    <span class="method">GET</span>
+                    <span class="endpoint">/api/reviews/ticket/{ticketId}</span>
+                    <span class="description">获取工单评价</span>
+                </li>
+                <li>
+                    <span class="method">GET</span>
+                    <span class="endpoint">/api/reviews/average-rating</span>
+                    <span class="description">获取平均评分</span>
+                </li>
+                <li>
+                    <span class="method">GET</span>
+                    <span class="endpoint">/api/reviews/statistics</span>
+                    <span class="description">获取评分统计</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>统计 API</h2>
+            <ul class="api-list">
+                <li>
+                    <span class="method">GET</span>
+                    <span class="endpoint">/api/statistics/tickets</span>
+                    <span class="description">获取工单统计信息</span>
+                </li>
+                <li>
+                    <span class="method">GET</span>
+                    <span class="endpoint">/api/statistics/agent-workload</span>
+                    <span class="description">获取客服工作量统计</span>
+                </li>
+                <li>
+                    <span class="method">GET</span>
+                    <span class="endpoint">/api/statistics/tickets/date-range</span>
+                    <span class="description">获取时间段内的工单统计</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>使用说明</h2>
+            <p>1. 首先使用测试用户登录系统</p>
+            <p>2. 客户用户可以创建工单并查看自己的工单</p>
+            <p>3. 客服用户可以处理分配的工单，回复工单，更新工单状态</p>
+            <p>4. 管理员可以管理所有工单，分配工单，查看统计信息</p>
+            <p>5. 工单解决后，客户可以对工单进行评价打分</p>
+            <p>6. 系统支持自动分配工单给工作量最少的客服</p>
+            <p>7. 支持工单转交功能，方便客服之间的协作</p>
+        </div>
+
+        <div class="section">
+            <h2>API 测试</h2>
+            <p>可以使用 Postman 或其他 API 测试工具来测试这些接口。</p>
+            <p>建议使用 Swagger UI 进行接口测试，访问地址：<code>http://localhost:8088/swagger-ui.html</code></p>
+        </div>
+    </div>
+</body>
+</html>
