@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>工单管理系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .ticket-list {
+            margin-bottom: 30px;
+        }
+        .ticket-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        .ticket-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .ticket-meta {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+            font-size: 12px;
+        }
+        .status-pending {
+            background-color: #ff9800;
+        }
+        .status-processing {
+            background-color: #2196f3;
+        }
+        .status-resolved {
+            background-color: #4caf50;
+        }
+        .status-closed {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>工单管理系统</h1>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <h3>总工单数</h3>
+                <div id="total-tickets">0</div>
+            </div>
+            <div class="stat-item">
+                <h3>待处理工单</h3>
+                <div id="pending-tickets">0</div>
+            </div>
+            <div class="stat-item">
+                <h3>处理中工单</h3>
+                <div id="processing-tickets">0</div>
+            </div>
+            <div class="stat-item">
+                <h3>已解决工单</h3>
+                <div id="resolved-tickets">0</div>
+            </div>
+        </div>
+        
+        <div class="ticket-list">
+            <h2>工单列表</h2>
+            <div id="ticket-list">
+                <!-- 工单列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 加载统计数据
+        fetch('/api/tickets/stats/total')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('total-tickets').textContent = data;
+            });
+        
+        fetch('/api/tickets/stats/status/待处理')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('pending-tickets').textContent = data;
+            });
+        
+        fetch('/api/tickets/stats/status/处理中')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('processing-tickets').textContent = data;
+            });
+        
+        fetch('/api/tickets/stats/status/已解决')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('resolved-tickets').textContent = data;
+            });
+        
+        // 加载工单列表
+        fetch('/api/tickets')
+            .then(response => response.json())
+            .then(tickets => {
+                const ticketList = document.getElementById('ticket-list');
+                tickets.forEach(ticket => {
+                    const ticketItem = document.createElement('div');
+                    ticketItem.className = 'ticket-item';
+                    
+                    let statusClass = '';
+                    switch(ticket.status) {
+                        case '待处理': statusClass = 'status-pending'; break;
+                        case '处理中': statusClass = 'status-processing'; break;
+                        case '已解决': statusClass = 'status-resolved'; break;
+                        case '已关闭': statusClass = 'status-closed'; break;
+                    }
+                    
+                    ticketItem.innerHTML = `
+                        <div class="ticket-title">${ticket.title}</div>
+                        <div class="ticket-meta">
+                            <span class="status ${statusClass}">${ticket.status}</span>
+                            分类: ${ticket.category} | 优先级: ${ticket.priority} | 创建时间: ${new Date(ticket.createTime).toLocaleString()}
+                        </div>
+                        <div class="ticket-content">${ticket.content}</div>
+                    `;
+                    
+                    ticketList.appendChild(ticketItem);
+                });
+            });
+    </script>
+</body>
+</html>

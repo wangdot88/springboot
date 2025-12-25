@@ -18,4 +18,9 @@ public class IndexController {
         model.addAttribute("str", str);
         return "index";
     }
+    
+    @RequestMapping(value = "/ticket")
+    public String ticket(HttpServletRequest request, HttpServletResponse response, Model model){
+        return "ticket";
+    }
 }
